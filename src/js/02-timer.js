@@ -2,8 +2,6 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import Notiflix from 'notiflix';
 
-
-
 const refs = {
   'input': document.querySelector('#datetime-picker'),
   'startBtn': document.querySelector('[data-start]'),
@@ -14,6 +12,7 @@ const refs = {
 }
 refs.startBtn.setAttribute('disabled', 'true')
 let selectedDate = null
+let datePick = false
 
 
 const options = {
@@ -22,6 +21,9 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
+    if(datePick){
+      return
+    }
     if((Date.now()-new Date(selectedDates[0]).getTime()) < 0){
       refs.startBtn.removeAttribute('disabled')
       refs.startBtn.addEventListener('click', startBtnHandler)
@@ -55,6 +57,8 @@ function pad(value) {
 }
 
 function startBtnHandler() {
+  datePick = !datePick
+
   const intervalID = setInterval(()=>{
     const timeDiff = convertMs(selectedDate - Date.now())
     refs.days.innerText = timeDiff.days
